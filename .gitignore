@@ -1,7 +1,6 @@
 __pycache__/
 Audio/
 MIDI/
-Static/
 Stems/
 
 *.pyc
