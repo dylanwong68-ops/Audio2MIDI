@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+
+<html>
+<title> Home </title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='style/style.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='style/modal.css')}}">
+<link rel="stylesheet" href="{{ url_for('static', filename='style/buttons.css')}}">
+
+<body style="background-color: #faf9f6;">
+<form action="/" method="post" enctype="multipart/form-data">
+<div class="card">
+    <div class="title">Audio2MIDI</div>
+    <div class="top">
+        <div class="border border-top" onclick="document.getElementById('fileInput').click()">
+            <image class="upload" src="{{ url_for('static', filename='images/upload.png')}}"></image>
+            <div class="txt txt-top">Upload Audio</div>
+            <input type="file" id="fileInput" name="audioFile" accept=".wav,.mp3,.webm" style="display: none;">
+        </div>
+    </div>
+    <div class="mid">
+        <div class="border">
+            <input type="text" class="txt-input" name="user_input" placeholder="Upload YT link">
+        </div>
+    </div>
+    <div class="bot">
+        <button type="button" class="btn" id="clrDir" name="clrDir" onclick="clrDir">Clear Files?</button>
+    </div>
+</div>
+    {%with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for msg in messages %}
+                <p class="result">{{msg}}</p>
+            {% endfor %}
+        {% endif %}
+    {% endwith%}
+
+<div class="modal-container" id="modal-container">
+    <div class="modal">
+        <input type="text" id="fileName" class="txt-input" name="fileName" placeholder="Enter Title">
+        <div class="switch-area">
+            <p class="switch-txt">Is this a solo piece?</p>
+            <label class="switch-btn">
+                <input type="checkbox" id="soloPiece" name="soloPiece" value="true">
+                <span class="slider"></span>
+            </label>
+        </div>
+        <button type="button" class="btn" onclick="submitAll()">Confirm</button>
+    </div>
+</div>
+</form> 
+
+<script>
+    document.getElementById('fileInput').addEventListener('change', function() {
+        openModal();
+    });
+
+    document.getElementById('clrDir').addEventListener('click', function() {
+        fetch("/clrDir", {method: "POST"}) 
+            .then(response => response.json())
+            .then(data => data)
+            .catch(error => console.error(error));
+    });
+
+    function openModal(){
+        document.getElementById("modal-container").style.opacity = "1";
+        document.getElementById("modal-container").style.pointerEvents = "all";
+    }
+
+    function closeModal(){
+        document.getElementById("modal-container").style.opacity = "0";
+        document.getElementById("modal-container").style.pointerEvents = "none";
+    }
+
+    function submitAll(){
+        closeModal();
+        document.querySelector("form").submit();
+    }
+</script>
+</body>
+</html>
